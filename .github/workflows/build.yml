@@ -13,7 +13,20 @@ jobs:
     - name: Install tools
       run: |
         sudo apt update
-        sudo apt install -y unzip build-essential
+        sudo apt install -y unzip build-essential git
+
+    # 🔥 DOWNLOAD COCOS2DX 2.2.2 FULL (ADA EXTERNAL LENGKAP)
+    - name: Download Cocos2d-x 2.2.2
+      run: |
+        git clone https://github.com/cocos2d/cocos2d-x.git cocos2dx_full
+        cd cocos2dx_full
+        git checkout cocos2d-x-2.2.2
+
+    # 🔥 COPY external + cocos2dx ke project kamu
+    - name: Inject cocos2dx & external
+      run: |
+        cp -r cocos2dx_full/cocos2dx NarutoSenki/
+        cp -r cocos2dx_full/external NarutoSenki/
 
     - name: Download NDK r10e
       run: |
