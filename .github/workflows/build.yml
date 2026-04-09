@@ -25,7 +25,7 @@ jobs:
 
     - name: Build .so
       run: |
-        cd NarutoSenki/projects/NarutoSenki/proj.android-studio/app/jni
+        cd projects/NarutoSenki/proj.android-studio/app/jni
         $NDK/ndk-build
 
     - name: Upload result
