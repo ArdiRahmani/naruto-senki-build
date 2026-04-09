@@ -25,7 +25,7 @@ jobs:
 
     - name: Build .so
       run: |
-        export NDK_MODULE_PATH=$GITHUB_WORKSPACE/NarutoSenki
+        export NDK_MODULE_PATH=$GITHUB_WORKSPACE/NarutoSenki:$GITHUB_WORKSPACE/NarutoSenki/external
         cd NarutoSenki/projects/NarutoSenki/proj.android-studio/app/jni
         $NDK/ndk-build
 
