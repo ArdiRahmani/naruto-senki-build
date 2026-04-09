@@ -1,0 +1,35 @@
+name: Build libcocos2dcpp.so
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install tools
+      run: |
+        sudo apt update
+        sudo apt install -y unzip build-essential
+
+    - name: Download NDK r10e
+      run: |
+        wget https://dl.google.com/android/repository/android-ndk-r10e-linux-x86_64.zip
+        unzip android-ndk-r10e-linux-x86_64.zip
+
+    - name: Set NDK
+      run: echo "NDK=$PWD/android-ndk-r10e" >> $GITHUB_ENV
+
+    - name: Build .so
+      run: |
+        cd NarutoSenki/projects/NarutoSenki/proj.android-studio/app/jni
+        $NDK/ndk-build
+
+    - name: Upload result
+      uses: actions/upload-artifact@v3
+      with:
+        name: libcocos2dcpp
+        path: NarutoSenki/projects/NarutoSenki/proj.android-studio/app/jni/libs/
