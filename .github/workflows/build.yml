@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v3
 
     - name: Install tools
       run: |
@@ -29,7 +29,7 @@ jobs:
         $NDK/ndk-build
 
     - name: Upload result
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: libcocos2dcpp
         path: NarutoSenki/projects/NarutoSenki/proj.android-studio/app/jni/libs/
