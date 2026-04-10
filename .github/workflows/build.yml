@@ -11,10 +11,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Install tools
+    - name: Install tools + fix ncurses
       run: |
         sudo apt update
-        sudo apt install -y unzip build-essential
+        sudo apt install -y unzip build-essential libncurses5
 
     - name: Download NDK r16b
       run: |
@@ -26,7 +26,7 @@ jobs:
         echo "NDK=$PWD/android-ndk-r16b" >> $GITHUB_ENV
         echo "NDK_MODULE_PATH=$GITHUB_WORKSPACE/NarutoSenki:$GITHUB_WORKSPACE/NarutoSenki/cocos2dx:$GITHUB_WORKSPACE/NarutoSenki/external:$GITHUB_WORKSPACE/NarutoSenki/extensions:$GITHUB_WORKSPACE/NarutoSenki/CocosDenshion:$GITHUB_WORKSPACE/NarutoSenki/scripting/lua:$GITHUB_WORKSPACE/NarutoSenki/scripting/lua/luajit:$GITHUB_WORKSPACE/NarutoSenki/scripting/lua/tolua" >> $GITHUB_ENV
 
-    - name: Clean libs (WAJIB)
+    - name: Clean build (WAJIB)
       run: |
         rm -rf NarutoSenki/**/libs/*
         rm -rf NarutoSenki/**/obj/*
@@ -36,6 +36,10 @@ jobs:
       run: |
         cd NarutoSenki/projects/NarutoSenki/proj.android-studio/app/jni
         $NDK/ndk-build V=1 -j2
+
+    - name: Check result
+      run: |
+        ls -lah NarutoSenki/projects/NarutoSenki/proj.android-studio/app/obj/local/armeabi-v7a/
 
     - name: Upload .so
       uses: actions/upload-artifact@v4
