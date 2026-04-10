@@ -11,36 +11,40 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    # ✅ Java 17 untuk SDK tools
+    # ✅ Java 17 buat SDK
     - name: Setup JDK 17 (SDK)
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
         java-version: '17'
 
-    # ✅ Setup Android SDK (skip check biar gak error)
+    # ✅ Setup Android SDK
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
       env:
         SKIP_JDK_VERSION_CHECK: true
 
-    # ✅ Accept licenses (fix error JDK)
+    # ✅ Accept licenses
     - name: Accept licenses
       run: yes | sdkmanager --licenses
       env:
         SKIP_JDK_VERSION_CHECK: true
 
-    # ✅ Install SDK + NDK
+    # ✅ Install SDK + NDK r16b (FIX UTAMA)
     - name: Install SDK components
       run: |
         sdkmanager "platform-tools"
         sdkmanager "platforms;android-30"
         sdkmanager "build-tools;30.0.3"
-        sdkmanager "ndk;21.4.7075529"
+        sdkmanager "ndk;16.1.4479499"
       env:
         SKIP_JDK_VERSION_CHECK: true
 
-    # 🔽 SWITCH ke Java 11 buat Gradle lama
+    # ✅ Set NDK path biar kebaca Gradle
+    - name: Set NDK path
+      run: echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/16.1.4479499" >> $GITHUB_ENV
+
+    # 🔽 Java 11 buat Gradle lama
     - name: Setup JDK 11 (Gradle)
       uses: actions/setup-java@v4
       with:
@@ -54,7 +58,7 @@ jobs:
         chmod +x gradlew
         ./gradlew assembleDebug --stacktrace
 
-    # ✅ Upload hasil APK
+    # ✅ Upload APK
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
