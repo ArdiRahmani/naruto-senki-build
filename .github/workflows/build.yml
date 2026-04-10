@@ -11,14 +11,14 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Install tools
+    - name: Install tools + fix old libs
       run: |
         sudo apt update
-        sudo apt install -y unzip build-essential libncurses6
+        sudo apt install -y unzip build-essential libncurses6 libtinfo6
 
-    - name: Fix ncurses for NDK r16b
-      run: |
+        # FIX NDK r16b (WAJIB)
         sudo ln -s /usr/lib/x86_64-linux-gnu/libncurses.so.6 /usr/lib/x86_64-linux-gnu/libncurses.so.5 || true
+        sudo ln -s /usr/lib/x86_64-linux-gnu/libtinfo.so.6 /usr/lib/x86_64-linux-gnu/libtinfo.so.5 || true
 
     - name: Download NDK r16b
       run: |
