@@ -1,4 +1,4 @@
-name: Build libNarsendcpp.so
+name: Build libcocos2dcpp.so
 
 on:
   push:
@@ -17,19 +17,26 @@ jobs:
         sudo apt update
         sudo apt install -y unzip build-essential
 
-    - name: Download NDK r21e
+    - name: Download Android NDK r21e
       run: |
         wget https://dl.google.com/android/repository/android-ndk-r21e-linux-x86_64.zip
         unzip android-ndk-r21e-linux-x86_64.zip
 
-    - name: Set NDK path
+    - name: Set environment
       run: |
         echo "NDK=$PWD/android-ndk-r21e" >> $GITHUB_ENV
+        echo "NDK_MODULE_PATH=$GITHUB_WORKSPACE/NarutoSenki:$GITHUB_WORKSPACE/NarutoSenki/cocos2dx:$GITHUB_WORKSPACE/NarutoSenki/CocosDenshion:$GITHUB_WORKSPACE/NarutoSenki/extensions:$GITHUB_WORKSPACE/NarutoSenki/external" >> $GITHUB_ENV
+
+    - name: Debug folder (biar yakin kebaca)
+      run: |
+        ls NarutoSenki
+        ls NarutoSenki/cocos2dx
+        ls NarutoSenki/external
 
     - name: Build libcocos2dcpp.so
       run: |
         cd NarutoSenki/projects/NarutoSenki/proj.android-studio/app/jni
-        $NDK/ndk-build NDK_DEBUG=1 V=1 -j2
+        $NDK/ndk-build V=1 -j2
 
     - name: Upload .so
       uses: actions/upload-artifact@v4
