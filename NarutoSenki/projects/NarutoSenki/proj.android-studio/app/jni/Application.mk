@@ -1,7 +1,10 @@
 APP_STL := c++_shared
 
-APP_CPPFLAGS :=  -std=c++2a -frtti -fsigned-char -fexceptions
+APP_CPPFLAGS := -std=gnu++11 -frtti -fsigned-char
 APP_LDFLAGS := -latomic
+
+APP_ABI := armeabi-v7a
+APP_PLATFORM := android-21
 
 APP_SHORT_COMMANDS := true
 
