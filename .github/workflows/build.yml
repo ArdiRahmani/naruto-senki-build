@@ -1,4 +1,4 @@
-        name: Build libcocos2dcpp.so
+name: Build libcocos2dcpp.so
 
 on:
   workflow_dispatch:
