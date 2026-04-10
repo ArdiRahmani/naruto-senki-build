@@ -1,8 +1,7 @@
 name: Build libcocos2dcpp.so
 
 on:
-  push:
-    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -17,23 +16,17 @@ jobs:
         sudo apt update
         sudo apt install -y unzip build-essential
 
-    - name: Download Android NDK r21e
+    - name: Download NDK r16b
       run: |
-        wget https://dl.google.com/android/repository/android-ndk-r21e-linux-x86_64.zip
-        unzip android-ndk-r21e-linux-x86_64.zip
+        wget https://dl.google.com/android/repository/android-ndk-r16b-linux-x86_64.zip
+        unzip android-ndk-r16b-linux-x86_64.zip
 
     - name: Set environment
       run: |
-        echo "NDK=$PWD/android-ndk-r21e" >> $GITHUB_ENV
-        echo "NDK_MODULE_PATH=$GITHUB_WORKSPACE/NarutoSenki:$GITHUB_WORKSPACE/NarutoSenki/cocos2dx:$GITHUB_WORKSPACE/NarutoSenki/CocosDenshion:$GITHUB_WORKSPACE/NarutoSenki/extensions:$GITHUB_WORKSPACE/NarutoSenki/external" >> $GITHUB_ENV
+        echo "NDK=$PWD/android-ndk-r16b" >> $GITHUB_ENV
+        echo "NDK_MODULE_PATH=$GITHUB_WORKSPACE/NarutoSenki:$GITHUB_WORKSPACE/NarutoSenki/cocos2dx:$GITHUB_WORKSPACE/NarutoSenki/external:$GITHUB_WORKSPACE/NarutoSenki/extensions:$GITHUB_WORKSPACE/NarutoSenki/CocosDenshion:$GITHUB_WORKSPACE/NarutoSenki/scripting/lua/luajit" >> $GITHUB_ENV
 
-    - name: Debug folder (biar yakin kebaca)
-      run: |
-        ls NarutoSenki
-        ls NarutoSenki/cocos2dx
-        ls NarutoSenki/external
-
-    - name: Build libcocos2dcpp.so
+    - name: Build
       run: |
         cd NarutoSenki/projects/NarutoSenki/proj.android-studio/app/jni
         $NDK/ndk-build V=1 -j2
