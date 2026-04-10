@@ -1,4 +1,4 @@
-name: Build libcocos2dcpp.so
+name: Build APK (Naruto Senki)
 
 on:
   workflow_dispatch:
@@ -11,42 +11,42 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Install tools + fix old libs
+    # ✅ Pakai Java 11 (WAJIB buat Gradle lama)
+    - name: Setup JDK 11
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '11'
+
+    # ✅ Setup Android SDK
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+
+    # ✅ Accept licenses
+    - name: Accept licenses
+      run: yes | sdkmanager --licenses
+
+    # ✅ Install platform & build tools (AMAN buat project lama)
+    - name: Install SDK components
       run: |
-        sudo apt update
-        sudo apt install -y unzip build-essential libncurses6 libtinfo6
+        sdkmanager "platform-tools"
+        sdkmanager "platforms;android-30"
+        sdkmanager "build-tools;30.0.3"
 
-        # FIX NDK r16b (WAJIB)
-        sudo ln -s /usr/lib/x86_64-linux-gnu/libncurses.so.6 /usr/lib/x86_64-linux-gnu/libncurses.so.5 || true
-        sudo ln -s /usr/lib/x86_64-linux-gnu/libtinfo.so.6 /usr/lib/x86_64-linux-gnu/libtinfo.so.5 || true
+    # ✅ Install NDK (biar cocos native ke-build)
+    - name: Install NDK
+      run: sdkmanager "ndk;21.4.7075529"
 
-    - name: Download NDK r16b
+    # ✅ Build APK via Gradle
+    - name: Build APK
       run: |
-        wget https://dl.google.com/android/repository/android-ndk-r16b-linux-x86_64.zip
-        unzip android-ndk-r16b-linux-x86_64.zip
+        cd NarutoSenki/projects/NarutoSenki/proj.android-studio
+        chmod +x gradlew
+        ./gradlew assembleDebug --stacktrace
 
-    - name: Set environment
-      run: |
-        echo "NDK=$PWD/android-ndk-r16b" >> $GITHUB_ENV
-        echo "NDK_MODULE_PATH=$GITHUB_WORKSPACE/NarutoSenki:$GITHUB_WORKSPACE/NarutoSenki/cocos2dx:$GITHUB_WORKSPACE/NarutoSenki/external:$GITHUB_WORKSPACE/NarutoSenki/extensions:$GITHUB_WORKSPACE/NarutoSenki/CocosDenshion:$GITHUB_WORKSPACE/NarutoSenki/scripting/lua:$GITHUB_WORKSPACE/NarutoSenki/scripting/lua/luajit:$GITHUB_WORKSPACE/NarutoSenki/scripting/lua/tolua" >> $GITHUB_ENV
-
-    - name: Clean build (WAJIB)
-      run: |
-        rm -rf NarutoSenki/**/libs/*
-        rm -rf NarutoSenki/**/obj/*
-        rm -rf NarutoSenki/**/obj/local/*
-
-    - name: Build
-      run: |
-        cd NarutoSenki/projects/NarutoSenki/proj.android-studio/app/jni
-        $NDK/ndk-build V=1 -j2
-
-    - name: Check result
-      run: |
-        ls -lah NarutoSenki/projects/NarutoSenki/proj.android-studio/app/obj/local/armeabi-v7a/ || true
-
-    - name: Upload .so
+    # ✅ Upload hasil APK
+    - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: libcocos2dcpp
-        path: NarutoSenki/projects/NarutoSenki/proj.android-studio/app/obj/local/armeabi-v7a/libcocos2dcpp.so
+        name: NarutoSenki-APK
+        path: NarutoSenki/projects/NarutoSenki/proj.android-studio/app/build/outputs/apk/debug/app-debug.apk
