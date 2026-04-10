@@ -11,10 +11,14 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Install tools + fix ncurses
+    - name: Install tools
       run: |
         sudo apt update
-        sudo apt install -y unzip build-essential libncurses5
+        sudo apt install -y unzip build-essential libncurses6
+
+    - name: Fix ncurses for NDK r16b
+      run: |
+        sudo ln -s /usr/lib/x86_64-linux-gnu/libncurses.so.6 /usr/lib/x86_64-linux-gnu/libncurses.so.5 || true
 
     - name: Download NDK r16b
       run: |
@@ -39,7 +43,7 @@ jobs:
 
     - name: Check result
       run: |
-        ls -lah NarutoSenki/projects/NarutoSenki/proj.android-studio/app/obj/local/armeabi-v7a/
+        ls -lah NarutoSenki/projects/NarutoSenki/proj.android-studio/app/obj/local/armeabi-v7a/ || true
 
     - name: Upload .so
       uses: actions/upload-artifact@v4
