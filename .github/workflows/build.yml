@@ -18,18 +18,27 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
+    # ✅ Setup Android SDK (skip check biar gak error)
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
+      env:
+        SKIP_JDK_VERSION_CHECK: true
 
+    # ✅ Accept licenses (fix error JDK)
     - name: Accept licenses
       run: yes | sdkmanager --licenses
+      env:
+        SKIP_JDK_VERSION_CHECK: true
 
+    # ✅ Install SDK + NDK
     - name: Install SDK components
       run: |
         sdkmanager "platform-tools"
         sdkmanager "platforms;android-30"
         sdkmanager "build-tools;30.0.3"
         sdkmanager "ndk;21.4.7075529"
+      env:
+        SKIP_JDK_VERSION_CHECK: true
 
     # 🔽 SWITCH ke Java 11 buat Gradle lama
     - name: Setup JDK 11 (Gradle)
@@ -38,14 +47,14 @@ jobs:
         distribution: 'temurin'
         java-version: '11'
 
-    # ✅ Build
+    # ✅ Build APK
     - name: Build APK
       run: |
         cd NarutoSenki/projects/NarutoSenki/proj.android-studio
         chmod +x gradlew
         ./gradlew assembleDebug --stacktrace
 
-    # ✅ Upload hasil
+    # ✅ Upload hasil APK
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
