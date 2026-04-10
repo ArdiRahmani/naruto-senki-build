@@ -1,40 +1,41 @@
-name: Build libcocos2dcpp.so
+name: Build libNarsendcpp.so
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout
+      uses: actions/checkout@v4
 
     - name: Install tools
       run: |
         sudo apt update
-        sudo apt install -y unzip build-essential git
+        sudo apt install -y unzip build-essential
 
-    # 🔥 DOWNLOAD COCOS2DX 2.2.2 FULL (ADA EXTERNAL LENGKAP)
-    - name: Download Cocos2d-x 2.2.2
+    - name: Download NDK r21e
       run: |
-        git clone https://github.com/cocos2d/cocos2d-x.git cocos2dx_full
-        cd cocos2dx_full
-        git checkout cocos2d-x-2.2.2
+        wget https://dl.google.com/android/repository/android-ndk-r21e-linux-x86_64.zip
+        unzip android-ndk-r21e-linux-x86_64.zip
 
-    # 🔥 COPY external + cocos2dx ke project kamu
-    - name: Inject cocos2dx & external
+    - name: Set NDK path
       run: |
-        cp -r cocos2dx_full/cocos2dx NarutoSenki/
-        cp -r cocos2dx_full/external NarutoSenki/
+        echo "NDK=$PWD/android-ndk-r21e" >> $GITHUB_ENV
 
-    - name: Download NDK r10e
+    - name: Build libcocos2dcpp.so
       run: |
-        wget https://dl.google.com/android/repository/android-ndk-r10e-linux-x86_64.zip
-        unzip android-ndk-r10e-linux-x86_64.zip
+        cd NarutoSenki/projects/NarutoSenki/proj.android-studio/app/jni
+        $NDK/ndk-build NDK_DEBUG=1 V=1 -j2
 
-    - name: Set NDK
-      run: echo "NDK=$PWD/android-ndk-r10e" >> $GITHUB_ENV
+    - name: Upload .so
+      uses: actions/upload-artifact@v4
+      with:
+        name: libcocos2dcpp
+        path: NarutoSenki/projects/NarutoSenki/proj.android-studio/app/obj/local/armeabi-v7a/libcocos2dcpp.so      run: echo "NDK=$PWD/android-ndk-r10e" >> $GITHUB_ENV
 
     - name: Build .so
       run: |
