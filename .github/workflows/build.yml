@@ -11,40 +11,41 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    # ✅ Pakai Java 11 (WAJIB buat Gradle lama)
-    - name: Setup JDK 11
+    # ✅ Java 17 untuk SDK tools
+    - name: Setup JDK 17 (SDK)
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
-        java-version: '11'
+        java-version: '17'
 
-    # ✅ Setup Android SDK
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
 
-    # ✅ Accept licenses
     - name: Accept licenses
       run: yes | sdkmanager --licenses
 
-    # ✅ Install platform & build tools (AMAN buat project lama)
     - name: Install SDK components
       run: |
         sdkmanager "platform-tools"
         sdkmanager "platforms;android-30"
         sdkmanager "build-tools;30.0.3"
+        sdkmanager "ndk;21.4.7075529"
 
-    # ✅ Install NDK (biar cocos native ke-build)
-    - name: Install NDK
-      run: sdkmanager "ndk;21.4.7075529"
+    # 🔽 SWITCH ke Java 11 buat Gradle lama
+    - name: Setup JDK 11 (Gradle)
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '11'
 
-    # ✅ Build APK via Gradle
+    # ✅ Build
     - name: Build APK
       run: |
         cd NarutoSenki/projects/NarutoSenki/proj.android-studio
         chmod +x gradlew
         ./gradlew assembleDebug --stacktrace
 
-    # ✅ Upload hasil APK
+    # ✅ Upload hasil
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
