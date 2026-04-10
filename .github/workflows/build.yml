@@ -35,16 +35,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: libcocos2dcpp
-        path: NarutoSenki/projects/NarutoSenki/proj.android-studio/app/obj/local/armeabi-v7a/libcocos2dcpp.so      run: echo "NDK=$PWD/android-ndk-r10e" >> $GITHUB_ENV
-
-    - name: Build .so
-      run: |
-        export NDK_MODULE_PATH=$GITHUB_WORKSPACE/NarutoSenki:$GITHUB_WORKSPACE/NarutoSenki/cocos2dx:$GITHUB_WORKSPACE/NarutoSenki/external
-        cd NarutoSenki/projects/NarutoSenki/proj.android-studio/app/jni
-        $NDK/ndk-build V=1
-
-    - name: Upload result
-      uses: actions/upload-artifact@v4
-      with:
-        name: libcocos2dcpp
-        path: NarutoSenki/projects/NarutoSenki/proj.android-studio/app/libs/
+        path: NarutoSenki/projects/NarutoSenki/proj.android-studio/app/obj/local/armeabi-v7a/libcocos2dcpp.so
