@@ -26,6 +26,12 @@ jobs:
         echo "NDK=$PWD/android-ndk-r16b" >> $GITHUB_ENV
         echo "NDK_MODULE_PATH=$GITHUB_WORKSPACE/NarutoSenki:$GITHUB_WORKSPACE/NarutoSenki/cocos2dx:$GITHUB_WORKSPACE/NarutoSenki/external:$GITHUB_WORKSPACE/NarutoSenki/extensions:$GITHUB_WORKSPACE/NarutoSenki/CocosDenshion:$GITHUB_WORKSPACE/NarutoSenki/scripting/lua:$GITHUB_WORKSPACE/NarutoSenki/scripting/lua/luajit:$GITHUB_WORKSPACE/NarutoSenki/scripting/lua/tolua" >> $GITHUB_ENV
 
+    - name: Clean libs (WAJIB)
+      run: |
+        rm -rf NarutoSenki/**/libs/*
+        rm -rf NarutoSenki/**/obj/*
+        rm -rf NarutoSenki/**/obj/local/*
+
     - name: Build
       run: |
         cd NarutoSenki/projects/NarutoSenki/proj.android-studio/app/jni
